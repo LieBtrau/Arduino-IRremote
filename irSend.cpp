@@ -25,6 +25,15 @@ void  IRsend::mark (unsigned int time)
 	if (time > 0) custom_delay_usec(time);
 }
 
+void IRsend::markPulses(byte nrOfPulses)
+{
+	tx_pulse_ctr = (nrOfPulses<<1) + 1;
+	TCNT2=0;
+	TIMER_ENABLE_PWM;
+	while(tx_pulse_ctr);
+	TIMER_DISABLE_PWM;
+}
+
 //+=============================================================================
 // Leave pin off for time (given in microseconds)
 // Sends an IR space for the specified number of microseconds.
@@ -34,6 +43,13 @@ void  IRsend::space (unsigned int time)
 {
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
 	if (time > 0) IRsend::custom_delay_usec(time);
+}
+
+void IRsend::spaceDeadPulses(byte nrOfPulses)
+{
+	TCNT2=0;
+	tx_pulse_ctr = nrOfPulses<<1;
+	while(tx_pulse_ctr);
 }
 
 
@@ -58,6 +74,7 @@ void  IRsend::enableIROut (int khz)
 #ifndef ESP32
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
+	TIMER_ENABLE_TX_INTR;
 
 	pinMode(TIMER_PWM_PIN, OUTPUT);
 	digitalWrite(TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low

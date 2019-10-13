@@ -198,3 +198,11 @@ ISR (TIMER_INTR_NAME)
 				else BLINKLED_OFF() ;   // if no user defined LED pin, turn default LED pin for the hardware on
 	}
 }
+
+ISR(TIMER_TX_INTR_NAME)
+{
+	if(tx_pulse_ctr)
+	{
+		tx_pulse_ctr--;
+	}
+}

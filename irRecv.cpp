@@ -90,6 +90,12 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeLegoPowerFunctions(results))  return true ;
 #endif
 
+#if DECODE_RCMM
+	DBG_PRINTLN("Attempting RCMM decode");
+	if (decodeRCMM(results))  return true ;
+#endif
+
+
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
@@ -142,6 +148,8 @@ void  IRrecv::enableIRIn ( )
 
 	// Timer2 Overflow Interrupt Enable
 	TIMER_ENABLE_INTR;
+	//Disable TX interrupt
+	TIMER_DISABLE_TX_INTR;
 
 	TIMER_RESET;
 

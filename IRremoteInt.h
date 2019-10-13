@@ -66,7 +66,8 @@ irparams_t;
 // Allow all parts of the code access to the ISR data
 // NB. The data can be changed by the ISR at any time, even mid-function
 // Therefore we declare it as "volatile" to stop the compiler/CPU caching it
-EXTERN  volatile irparams_t  irparams;
+EXTERN volatile irparams_t  irparams;
+EXTERN volatile byte tx_pulse_ctr;
 
 //------------------------------------------------------------------------------
 // Defines for setting and clearing register bits
@@ -87,10 +88,10 @@ EXTERN  volatile irparams_t  irparams;
 
 // Due to sensor lag, when received, Marks  tend to be 100us too long and
 //                                   Spaces tend to be 100us too short
-#define MARK_EXCESS    100
+#define MARK_EXCESS    50//100
 
 // Upper and Lower percentage tolerances in measurements
-#define TOLERANCE       25
+#define TOLERANCE       10//25
 #define LTOL            (1.0 - (TOLERANCE/100.))
 #define UTOL            (1.0 + (TOLERANCE/100.))
 
